@@ -2,11 +2,39 @@
     'use strict';
 
     var CpuMonitor = require('./lib/cpu-monitor'),
-        monitor = new CpuMonitor();
+        monitor = new CpuMonitor(),
 
+        Socket = require('socket.io'),
+        io,
+
+        clients = [],
+
+        server = require('hapi').createServer(8080);
+
+    server.start();
     monitor.start(5000);
 
-    monitor.on(CpuMonitor.prototype.CPU_UPDATE_EVENT, function (data) {
-        console.log('Total User Time: ', data.totalUserTime);
+    io = Socket.listen(server.listener);
+
+    io.on('connection', function (socket) {
+        clients.push(socket);
     });
+
+    monitor.on(monitor.CPU_UPDATE_EVENT, function (data) {
+        var clientIndex;
+
+        for (clientIndex = 0; clientIndex < clients.length; clientIndex += 1) {
+            clients[clientIndex].emit('cpu_update', data);
+        }
+    });
+
+    server.route({
+        path: "/{static*}",
+        method: "GET",
+        handler: {
+            directory: {
+                path: "."
+            }
+        }
+    })
 }());
