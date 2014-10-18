@@ -1,11 +1,19 @@
 {
   "name": "rt-sysmon",
   "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/zpratt/rt-sysmon"
+  },
   "description": "Real-time system monitor",
   "main": "index.js",
   "scripts": {
     "test": "npm test"
   },
   "author": "zach pratt",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "hapi": "^7.0.0",
+    "socket.io": "^1.1.0"
+  }
 }
