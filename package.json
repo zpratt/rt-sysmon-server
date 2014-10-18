@@ -1,0 +1,11 @@
+{
+  "name": "rt-sysmon",
+  "version": "1.0.0",
+  "description": "Real-time system monitor",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "author": "zach pratt",
+  "license": "MIT"
+}
