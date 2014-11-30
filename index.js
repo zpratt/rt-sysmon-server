@@ -1,24 +1,24 @@
 (function () {
     'use strict';
 
-    var CpuMonitor = require('./lib/cpu-monitor'),
+    var restify = require('restify'),
+
+        CpuMonitor = require('./lib/cpu-monitor'),
         monitor = new CpuMonitor(),
 
         Socket = require('socket.io'),
         io,
 
         clients = [],
+        server = restify.createServer();
 
-        server = require('hapi').createServer(8080);
-
-    server.start();
-    monitor.start(5000);
-
-    io = Socket.listen(server.listener);
+    io = Socket.listen(server);
 
     io.on('connection', function (socket) {
         clients.push(socket);
     });
+
+    monitor.start(5000);
 
     monitor.on(monitor.CPU_UPDATE_EVENT, function (data) {
         var clientIndex;
@@ -28,13 +28,7 @@
         }
     });
 
-    server.route({
-        path: "/{static*}",
-        method: "GET",
-        handler: {
-            directory: {
-                path: "."
-            }
-        }
-    })
+    server.listen(8080, function () {
+        console.log('listening on port 8080');
+    });
 }());
