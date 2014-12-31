@@ -27,11 +27,11 @@
         clients.push(socket);
     });
 
-    monitor.on(monitor.CPU_UPDATE_EVENT, function (data) {
+    monitor.model.on('change:load', function (model) {
         var clientIndex;
 
         for (clientIndex = 0; clientIndex < clients.length; clientIndex += 1) {
-            clients[clientIndex].emit('cpu_update', data);
+            clients[clientIndex].emit('cpu_update', model.toJSON());
         }
     });
 
